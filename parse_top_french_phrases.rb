@@ -78,3 +78,5 @@ puts "we are missing precisely #{(1.upto(5000).to_a - items.map(&:rank)).size} w
 file_handle = File.open('./out.js', 'w')
 file_handle.write(items.to_json)
 file_handle.close
+
+puts "wrote results to out.js"
