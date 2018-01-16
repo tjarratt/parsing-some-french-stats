@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'json'
 
 class TopFrenchItem
   attr_reader :rank, :word, :category, :translation, :exampleSentence
@@ -10,14 +11,14 @@ class TopFrenchItem
     @translation = translation
     @exampleSentence = exampleSentence
   end
-end
 
-class Word
-  attr_reader :french, :english
-
-  def initialize(french, english)
-    @french = french
-    @english = english
+  def to_json(*a)
+    {
+      :rank => @rank,
+      :word => @word,
+      :category => @category,
+      :translation => @translation,
+    }.to_json(*a)
   end
 end
 
@@ -44,11 +45,8 @@ def parse_next_top_french_item(input)
   word = matches[2]
   category = matches[3]
   english = matches[4]
-  puts "#{rank} is '#{word}', categorized as '#{category}'"
-  puts "    -> #{english}"
 
   # validate category
-  # read simple english translation
   # newline
   # asterisk, french sentence (possible newline here)
   # double dash
@@ -75,5 +73,8 @@ while lines do
 end
 
 puts "we read #{items.size} items out of the corpus"
+puts "we are missing precisely #{(1.upto(5000).to_a - items.map(&:rank)).size} words"
 
-puts (1.upto(5000).to_a - items.map(&:rank).sort).inspect
+file_handle = File.open('./out.js', 'w')
+file_handle.write(items.to_json)
+file_handle.close
