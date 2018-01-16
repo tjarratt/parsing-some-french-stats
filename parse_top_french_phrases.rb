@@ -31,13 +31,25 @@ class ExampleSentence
   end
 end
 
+def match_next(line)
+  one_category = /^(\d+) ([[:alpha:]]+) ([[:alpha:]]+) (.+)$/
+  many_categories = /^(\d+) ([[:alpha:]]+) ([[:alpha:]]+(,\s*[[:alpha:]]+)*) (.+)$/
+
+  matches = line.match(one_category)
+  return matches if matches
+
+  matches = line.match(many_categories)
+  return matches if matches
+
+  return nil
+end
+
 def parse_next_top_french_item(input)
   # take line off the top
   line, remainder = read_next_line(input)
   return [nil, nil] unless line
 
-  line_regexp = /^(\d+) ([[:alpha:]]+) ([[:alpha:]]+) (.+)$/
-  matches = line.match(line_regexp)
+  matches = match_next(line)
 
   return [nil, remainder] unless matches
 
@@ -72,8 +84,11 @@ while lines do
   lines = next_lines
 end
 
+missing = 1.upto(5000).to_a - items.map(&:rank)
+
 puts "we read #{items.size} items out of the corpus"
-puts "we are missing precisely #{(1.upto(5000).to_a - items.map(&:rank)).size} words"
+puts "we are missing precisely #{missing.size} words"
+puts "first 10 missing numbers are #{missing[0..10]}" unless missing.empty?
 
 file_handle = File.open('./out.js', 'w')
 file_handle.write(items.to_json)
