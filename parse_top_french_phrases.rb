@@ -33,7 +33,7 @@ end
 
 def match_next(line)
   one_category = /^(\d+) ([[:alpha:]]+) ([[:alpha:]]+) (.+)$/
-  many_categories = /^(\d+) ([[:alpha:]]+) ([[:alpha:]]+(,\s*[[:alpha:]]+)*) (.+)$/
+  many_categories = /^(\d+) ([[:alpha:]]+) ([[:alpha:]]+(,\s*[[:alpha:]]+(\([[:alpha:]]+\))?)*) (.+)$/
 
   matches = line.match(one_category)
   return matches if matches
