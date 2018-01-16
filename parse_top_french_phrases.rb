@@ -91,7 +91,7 @@ puts "we are missing precisely #{missing.size} words"
 puts "first 10 missing numbers are #{missing[0..10]}" unless missing.empty?
 
 file_handle = File.open('./out.js', 'w')
-file_handle.write(items.to_json)
+file_handle.write(JSON.pretty_generate(items))
 file_handle.close
 
 puts "wrote results to out.js"
